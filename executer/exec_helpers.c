@@ -26,9 +26,9 @@ void	close_wait(int **fd, int **exit_status_fd, int *pid, int cmd_number)
 	j = 0;
 	while (j < cmd_number)
 	{
-		waitpid(pid[j], &g_last_exit_status, 0);
+		waitpid(pid[j], &(g_last_exit.exit_status), 0);
 		if (j < cmd_number - 1)
-			write(exit_status_fd[j][1], &g_last_exit_status, sizeof(int));
+			write(exit_status_fd[j][1], &(g_last_exit.exit_status), sizeof(int));
 		j++;
 	}
 	j = 0;

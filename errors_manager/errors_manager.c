@@ -53,3 +53,13 @@ int	pid_error(int *pid, int i, int **fd, int cmd_number)
 	}
 	return (1);
 }
+
+void	here_doc_error(char *line, char *delimiter)
+{
+	if (!line)
+	{
+		printf("minishell: warning: here-document delimited by end-of-line (wanted'%s')\n", delimiter);
+		return ;
+	}
+	free(line);
+}

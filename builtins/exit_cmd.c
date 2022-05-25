@@ -14,6 +14,8 @@
 
 void	exit_cmd(char *line, char **token_arr, char *prompt, t_command *command)
 {
+	if (!line)
+		exit(EXIT_SUCCESS);
 	if (command->next != NULL
 		|| ft_strncmp(command->cmd_args[0], "exit", 4) != 0)
 		return ;

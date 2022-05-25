@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror 
+FLAGS = -Wall -Wextra -Werror -lreadline -lncurses
 
 PARSER = free_all.c get_command.c get_env.c get_envp_arr.c set_cmd_args.c
 
@@ -19,6 +19,8 @@ ERRORS_MANAGER = errors_manager.c
 
 BUILTINS = is_builtin.c exit_cmd.c cd.c pwd.c env.c export.c export_print.c unset.c echo.c
 
+SIGNALS = signal.c
+
 SOURCE = main.c \
 		$(addprefix parser/, $(PARSER)) \
 		$(addprefix executer/, $(EXECUTOR)) \
@@ -26,7 +28,8 @@ SOURCE = main.c \
 		$(addprefix prompt/, $(PROMPT)) \
 		$(addprefix gnl/, $(GNL)) \
 		$(addprefix errors_manager/, $(ERRORS_MANAGER)) \
-		$(addprefix builtins/, $(BUILTINS)) 
+		$(addprefix builtins/, $(BUILTINS)) \
+		$(SIGNALS)
 
 OBJECT = $(SOURCE:.c=.o)
 
@@ -35,7 +38,7 @@ HEADER = minishell.h
 all: $(NAME)
 
 $(NAME): $(OBJECT) $(HEADER)
-	$(CC) $(FLAGS) $(OBJECT) -lreadline -lncurses -o $(NAME)
+	$(CC) $(FLAGS) $(OBJECT) -lreadline -lcurses -o $(NAME)
 
 %.o:%.c $(HEADER)
 	$(CC) -c $< -o $(<:.c=.o)

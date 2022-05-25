@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 16:01:09 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 10:23:02 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/22 16:20:04 by cadda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,20 @@ int	main(int argc, char **argv, char **envp)
 	char		*prompt;
 	t_env		*env;
 
+	sigset_t	set;
+
+	//g_last_exit_status = malloc(sizeof(int));
+	//if (g_last_exit_status == NULL)
+	//	exit(EXIT_FAILURE);
+	g_last_exit.exit_status = 0;
+	g_last_exit.pid = 1;
+
+	sigemptyset(&set);
+
 	env = get_env_list(envp);
 	envp = get_envp_arr(envp);
+	//signal(SIGINT, sigint_handler);
+	//signal(SIGQUIT, sigint_handler);
 	while (1)
 	{
 		prompt = path_for_prompt(envp);
@@ -73,12 +85,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		line = readline(prompt);
-		if (!*line)
-		{
-			free(line);
-			free(prompt);
-			continue ;
-		}
+		if (!line)
+			exit_cmd(line, token_arr, prompt, cmd_list_start);
 		add_history(line);
 		token_arr = ft_split(line, ' ');
 		cmd_list_start = get_command_list(token_arr, envp, env);

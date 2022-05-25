@@ -33,7 +33,7 @@ void	here_doc(t_command *command)
 		free(line);
 		line = get_next_line(STDIN_FILENO);
 	}
-	free(line);
+	here_doc_error(line, command->delimiter);
 	pipe(command->del_fd);
 	write(command->del_fd[1], final, ft_strlen(final));
 	free(final);

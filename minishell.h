@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 12:02:09 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 09:36:28 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/22 16:00:02 by cadda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,13 @@
 # include <curses.h>
 # include <term.h>
 
-int	g_last_exit_status;
+typedef struct s_global
+{
+	int	pid;
+	int	exit_status;
+}	t_global;
+
+t_global	g_last_exit;
 
 typedef struct s_env
 {
@@ -123,6 +129,7 @@ char			*cut_path(char *path);
 void			open_file_error(int in_fd, int out_fd, t_command *command);
 void			pipe_error(int pipe);
 void			cmd_error(char *cmd);
+void			here_doc_error(char *line, char *delimiter);
 int				pid_error(int *pid, int i, int **fd, int cmd_number);
 
 /*-----------builtins--------------*/
@@ -136,5 +143,8 @@ void			export(t_command *cmd, int *exp_fd);
 void			export_print(t_env *env);
 void			unset(t_command *cmd, int *exp_fd);
 void			echo_cmd(t_command *cmd);
+
+/*-----------builtins--------------*/
+void			sigint_handler(int sig);
 
 #endif

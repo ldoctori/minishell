@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	*dollar_from_env(t_command *command, char *token)
+char	*dollar_from_env(t_command *command, char *token)
 {
 	t_env	*env;
 	char	*dollar;
@@ -20,7 +20,7 @@ void	*dollar_from_env(t_command *command, char *token)
 	env = command->env;
 	dollar = NULL;
 	if (*(token + 1) == '?')
-		return (ft_itoa(g_last_exit_status));
+		return (ft_itoa(g_last_exit.exit_status));
 	while (env)
 	{
 		if (ft_strcmp(token + 1, env->name) == 0)
