@@ -27,10 +27,13 @@ void	close_wait(int **fd, int **exit_status_fd, int *pid, int cmd_number)
 	while (j < cmd_number)
 	{
 		waitpid(pid[j], &(g_last_exit.exit_status), 0);
+		if (g_last_exit.exit_status == 9)
+			g_last_exit.exit_status = 130;
 		if (j < cmd_number - 1)
 			write(exit_status_fd[j][1], &(g_last_exit.exit_status), sizeof(int));
 		j++;
 	}
+	g_last_exit.flag = -1;
 	j = 0;
 	while (j < cmd_number - 1)
 	{

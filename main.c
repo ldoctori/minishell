@@ -54,6 +54,20 @@ t_env	*go_on(t_command *cmd_list_start, char *line,
 	return (env);
 }
 
+void	signals_catcher()
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask, SIGINT);
+	g_last_exit.exit_status = 0;
+	g_last_exit.flag = -1;
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = &sig_int_handler;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
@@ -62,23 +76,14 @@ int	main(int argc, char **argv, char **envp)
 	char		*prompt;
 	t_env		*env;
 
-	sigset_t	set;
 
-	//g_last_exit_status = malloc(sizeof(int));
-	//if (g_last_exit_status == NULL)
-	//	exit(EXIT_FAILURE);
-	g_last_exit.exit_status = 0;
-	g_last_exit.pid = 1;
-
-	sigemptyset(&set);
-
+	signals_catcher();
 	env = get_env_list(envp);
 	envp = get_envp_arr(envp);
-	//signal(SIGINT, sigint_handler);
-	//signal(SIGQUIT, sigint_handler);
 	while (1)
 	{
 		prompt = path_for_prompt(envp);
+		g_last_exit.prompt = prompt;
 		if (prompt == NULL)
 		{
 			free_parser(line, token_arr, cmd_list_start);
@@ -86,7 +91,16 @@ int	main(int argc, char **argv, char **envp)
 		}
 		line = readline(prompt);
 		if (!line)
+		{
+			write(0, "exit\n", 5);
 			exit_cmd(line, token_arr, prompt, cmd_list_start);
+		}
+		if (*line == '\0')
+		{
+			free(prompt);
+			free(line);
+			continue ;
+		}
 		add_history(line);
 		token_arr = ft_split(line, ' ');
 		cmd_list_start = get_command_list(token_arr, envp, env);

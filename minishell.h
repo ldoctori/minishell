@@ -30,8 +30,11 @@
 
 typedef struct s_global
 {
-	int	pid;
-	int	exit_status;
+	int		flag;
+	int		exit_status;
+	int		*pid;
+	char	*prompt;
+
 }	t_global;
 
 t_global	g_last_exit;
@@ -145,6 +148,8 @@ void			unset(t_command *cmd, int *exp_fd);
 void			echo_cmd(t_command *cmd);
 
 /*-----------builtins--------------*/
-void			sigint_handler(int sig);
+void			sig_int_handler(int sig);
+void			signals_catcher();
+void	sig_quit_handler(int sig);
 
 #endif

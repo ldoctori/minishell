@@ -1,29 +1,31 @@
 #include "minishell.h"
 
-void	sigint_handler(int sig)
+void	sig_int_handler(int sig)
 {
-	if (g_last_exit.pid == 0)
+    struct termios old_term, new_term;
+    char *cursor;
+    char *esc_sequence;
+
+	new_term = old_term;
+	if (g_last_exit.flag == -1)
 	{
-		if (sig == SIGQUIT)
-			ft_putstr_fd("Quit!\n", 1);
-		else if (sig == SIGINT)
-			ft_putstr_fd("\n", 1);
+		printf("\n");
+		printf("%s",g_last_exit.prompt);
 	}
-	/*else
+	else if (g_last_exit.flag == 0)
 	{
-		if (sig == SIGINT)
+		printf("\n");
+		exit(EXIT_SUCCESS);
+	}
+	else if (g_last_exit.flag > 0)
+	{
+		printf("\n");
+		int i = 0;
+		while (g_last_exit.pid[i])
 		{
-			g_last_exit.exit_status = 1;
-			ft_putstr_fd("\n", 2);
-			rl_replace_line("", 0);
-			rl_on_new_line();
-			rl_redisplay();
+			kill(g_last_exit.pid[i], SIGKILL);
+			g_last_exit.exit_status = 130;
+			i++;
 		}
-		//else if (sig == SIGQUIT)
-		//{
-		//	rl_on_new_line();
-			//rl_on_new_line();
-			//rl_redisplay();
-		//}
-	}*/
+	}
 }

@@ -66,6 +66,7 @@ void	exec_pid(t_command *command, int *exp_fd, int **exit_status_fd, int i)
 	char	*valid_path;
 	char	*exit_status;
 
+	g_last_exit.flag = 0;
 	exit_status = is_exit_status_read(command, exit_status_fd, i);
 	if (access(command->cmd_args[0], X_OK) == 0)
 	{
@@ -104,29 +105,34 @@ t_command	*cmds_executer_helper(t_command *command,
 
 void	cmds_executer(t_command *command, char *envp[])
 {
-	int	*pid;
 	int	i;
 	int	**fd;
 	int	*exp_fd;
 	int	**exit_status_fd;
 
-	pid = malloc(sizeof(int) * command->cmd_number);
+	g_last_exit.pid = malloc(sizeof(int) * (command->cmd_number + 1));
+	g_last_exit.pid[command->cmd_number] = 0;
 	fd = fd_allocate(command->cmd_number);
 	exit_status_fd = fd_allocate(command->cmd_number);
 	i = 0;
 	while (command)
 	{
-		here_doc(command);
 		exp_fd = malloc(sizeof(int) * 2);
 		pipe(exp_fd);
-		pid[i] = fork();
-		if (pid_error(pid, i, fd, command->cmd_number) && pid[i] == 0)
-		{
+		g_last_exit.pid[i] = fork();
+		g_last_exit.flag = g_last_exit.pid[i];
+		if (pid_error(g_last_exit.pid, i, fd, command->cmd_number) && g_last_exit.pid[i] == 0)
+		{	
+			signal(SIGINT,SIG_IGN);
+			here_doc(command);
+			signal(SIGQUIT, SIG_DFL);
 			close(exp_fd[0]);
 			fd_duplicate(fd, i, command);
 			exec_pid(command, exp_fd, exit_status_fd, i);
 		}
-		command = cmds_executer_helper(command, exp_fd, pid, &i);
+		if (ft_strcmp(command->cmd_args[0], "./minishell") == 0)
+			g_last_exit.flag = -2;
+		command = cmds_executer_helper(command, exp_fd, g_last_exit.pid, &i);
 	}
-	finish_exec(fd, exit_status_fd, pid, i);
+	finish_exec(fd, exit_status_fd, g_last_exit.pid, i);
 }

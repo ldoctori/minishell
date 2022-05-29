@@ -15,17 +15,26 @@
 void	echo_cmd(t_command *cmd)
 {
 	int	i;
+	bool new_line;
 
 	i = 1;
+	new_line = true;
 	if (!cmd->cmd_args[i])
 	{
 		printf("\n");
 		return ;
 	}
+	
+	if (ft_strcmp(cmd->cmd_args[i], "-n") == 0)
+	{
+		i++;
+		new_line = false;
+	}
 	while (cmd->cmd_args[i])
 	{
 		printf("%s", cmd->cmd_args[i]);
-		printf("\n");
+		if (new_line)
+			printf("\n");
 		i++;
 	}
 }
