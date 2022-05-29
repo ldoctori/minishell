@@ -35,39 +35,13 @@ char	*find_cmd_path(char **paths, t_command *command)
 	return (0);
 }
 
-char	*is_exit_status_read(t_command *command, int **exit_status_fd, int i)
-{
-	int		j;
-	int		exit_status_int;
-	char	*exit_status;
-
-	if (i == 0)
-		return (NULL);
-	j = 0;
-	exit_status = NULL;
-	while (command->cmd_args[j])
-	{
-		if (ft_strcmp(command->cmd_args[j], "$?") == 0)
-		{
-			read(exit_status_fd[i - 1][0], &exit_status_int, sizeof(int));
-			exit_status = ft_itoa(exit_status_int);
-			command->cmd_args[j] = exit_status;
-			break ;
-		}
-		j++;
-	}
-	return (exit_status);
-}
-
-void	exec_pid(t_command *command, int *exp_fd, int **exit_status_fd, int i)
+void	exec_pid(t_command *command, int *exp_fd)
 {
 	char	*str_of_paths;
 	char	**paths;
 	char	*valid_path;
-	char	*exit_status;
 
 	g_last_exit.flag = 0;
-	exit_status = is_exit_status_read(command, exit_status_fd, i);
 	if (access(command->cmd_args[0], X_OK) == 0)
 	{
 		execve(command->cmd_args[0], command->cmd_args, command->envp);
@@ -95,15 +69,13 @@ int	*fork_create(int i)
 	return (exp_fd);
 }
 
-void	cmds_executer(t_command *command, char *envp[])
+void	cmds_executer(t_command *command)
 {
 	int	i;
 	int	**fd;
 	int	*exp_fd;
-	int	**exit_status_fd;
 
 	fd = fd_allocate(command->cmd_number);
-	exit_status_fd = fd_allocate(command->cmd_number);
 	i = 0;
 	while (command)
 	{
@@ -116,9 +88,9 @@ void	cmds_executer(t_command *command, char *envp[])
 			signal(SIGQUIT, SIG_DFL);
 			close(exp_fd[0]);
 			fd_duplicate(fd, i, command);
-			exec_pid(command, exp_fd, exit_status_fd, i);
+			exec_pid(command, exp_fd);
 		}
 		command = cmds_executer_helper(command, exp_fd, g_last_exit.pid, &i);
 	}
-	finish_exec(fd, exit_status_fd, g_last_exit.pid, i);
+	finish_exec(fd, g_last_exit.pid, i);
 }

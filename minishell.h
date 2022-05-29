@@ -79,7 +79,7 @@ char			*ft_strldup(char *src, int n);
 char			*ft_strchr(const char *s, int c);
 char			**ft_split(char *s, char c);
 void			ft_split_allocate(t_struct *ss);
-void			len_ptr_increas(char **ptr, int *len, char some_c);
+void			len_ptr_increas(char **ptr, unsigned int *len, char some_c);
 char			**free_all(t_struct *ss);
 void			ft_putstr_fd(char *s, int fd);
 char			*ft_itoa(int n);
@@ -112,21 +112,18 @@ void			prompt_check(char *line, char *prompt,
 /*-----------executor--------------*/
 void			free_fd(int **fd, int fd_number);
 void			del_fd_free(int *del_fd);
-void			cmds_executer(t_command *command, char *envp[]);
+void			cmds_executer(t_command *command);
 t_command		*cmds_executer_helper(t_command *command,
 					int *exp_fd, int *pid, int *i);
 void			fd_duplicate(int **fd, int i, t_command *command);
-void			close_wait(int **fd, int **exit_status_fd,
-					int *pid, int cmd_number);
-void			wait_all_pid(int **exit_status_fd, int *pid, int cmd_number);
-void			exec_pid(t_command *command, int *exp_fd,
-					int **exit_status_fd, int i);
+void			close_wait(int **fd, int *pid, int cmd_number);
+void			wait_all_pid(int *pid, int cmd_number);
+void			exec_pid(t_command *command, int *exp_fd);
 char			*find_cmd_path(char **paths, t_command *command);
 char			*find_file_path(char *file, char **envp);
 int				open_file_fd(char *file, t_command *command, char c);
 void			here_doc(t_command *command);
-void			finish_exec(int **fd, int **exit_status_fd,
-					int *pid, int cmd_number);
+void			finish_exec(int **fd, int *pid, int cmd_number);
 char			*get_path_env(char **envp);
 
 /*-----------GNL--------------*/

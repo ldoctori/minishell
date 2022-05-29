@@ -12,12 +12,11 @@
 
 #include "../minishell.h"
 
-void	finish_exec(int **fd, int **exit_status_fd, int *pid, int cmd_number)
+void	finish_exec(int **fd, int *pid, int cmd_number)
 {
-	close_wait(fd, exit_status_fd, pid, cmd_number);
+	close_wait(fd, pid, cmd_number);
 	free(pid);
 	free_fd(fd, cmd_number - 1);
-	free_fd(exit_status_fd, cmd_number - 1);
 }
 
 int	**fd_allocate(int cmd_number)

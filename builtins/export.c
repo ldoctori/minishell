@@ -72,6 +72,7 @@ void	export(t_command *cmd, int *exp_fd)
 	int	i;
 	int	change;
 
+	i = 1;
 	if (cmd->cmd_args[1] == NULL)
 	{
 		export_print(cmd->env);

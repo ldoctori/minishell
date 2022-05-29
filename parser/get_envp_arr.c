@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/22 14:31:54 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 14:31:56 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 18:24:33 by ldoctori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	**get_envp_arr(char **envp)
 {
 	char	**new_envp;
 	int		size;
-	int		i;
 
 	size = 0;
 	while (envp[size])

@@ -12,10 +12,8 @@
 
 #include "minishell.h"
 
-void	sig_int_handler(int sig)
+void	sig_int_hand_halper(void)
 {
-	int	i;
-
 	if (g_last_exit.flag == -1)
 	{
 		printf("\n");
@@ -26,15 +24,25 @@ void	sig_int_handler(int sig)
 		printf("\n");
 		exit(EXIT_SUCCESS);
 	}
-	else if (g_last_exit.flag > 0)
+}
+
+void	sig_int_handler(int sig)
+{
+	int	i;
+
+	if (sig == SIGINT)
 	{
-		printf("\n");
-		i = 0;
-		while (g_last_exit.pid[i])
+		sig_int_hand_halper();
+		if (g_last_exit.flag > 0)
 		{
-			kill(g_last_exit.pid[i], SIGKILL);
-			g_last_exit.exit_status = 130;
-			i++;
+			printf("\n");
+			i = 0;
+			while (g_last_exit.pid[i])
+			{
+				kill(g_last_exit.pid[i], SIGKILL);
+				g_last_exit.exit_status = 130;
+				i++;
+			}
 		}
 	}
 }

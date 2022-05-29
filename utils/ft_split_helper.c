@@ -12,9 +12,10 @@
 
 #include "../minishell.h"
 
-int	ft_split_allocate_helper(t_struct *ss, int *i, int *count)
+int	ft_split_allocate_helper(t_struct *ss,
+		unsigned int *i, unsigned int *count)
 {
-	unsigned int	quot;
+	char	quot;
 
 	if (ss->s[*i] == '"' || ss->s[*i] == 39)
 	{
@@ -33,7 +34,6 @@ void	ft_split_allocate(t_struct *ss)
 {
 	unsigned int	i;
 	unsigned int	count;
-	unsigned int	quot;
 
 	i = 0;
 	count = 0;
@@ -72,7 +72,7 @@ char	**free_all(t_struct *ss)
 	return (0);
 }
 
-void	len_ptr_increas(char **ptr, int *len, char some_c)
+void	len_ptr_increas(char **ptr, unsigned int *len, char some_c)
 {
 	while (**ptr != some_c && **ptr)
 	{

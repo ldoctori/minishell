@@ -39,7 +39,7 @@ t_env	*go_on(t_command *cmd_list_start, char *line,
 		g_last_exit.pid = malloc(sizeof(int)
 				* (cmd_list_start->cmd_number + 1));
 		g_last_exit.pid[cmd_list_start->cmd_number] = 0;
-		cmds_executer(cmd_list_start, cmd_list_start->envp);
+		cmds_executer(cmd_list_start);
 		env = env_update(cmd_list_start);
 	}
 	free(prompt);

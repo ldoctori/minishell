@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror -lreadline -lncurses
+FLAGS = -Wall -Wextra -Werror 
 
 PARSER = free_all.c get_command.c get_env.c get_envp_arr.c set_cmd_args.c \
 			some_main_checks.c
@@ -43,7 +43,7 @@ $(NAME): $(OBJECT) $(HEADER)
 	$(CC) $(FLAGS) $(OBJECT) -lreadline -lcurses -o $(NAME)
 
 %.o:%.c $(HEADER)
-	$(CC) -c $< -o $(<:.c=.o)
+	$(CC) $(FLAGS) -c $< -o $(<:.c=.o)
 
 clean:
 	rm -f $(OBJECT)

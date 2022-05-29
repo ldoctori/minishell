@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 void	ft_alloc_elem_helper2(t_struct *ss, unsigned int elem,
-			unsigned int *len, unsigned int some_c)
+			unsigned int *len, char some_c)
 {
 	if (some_c == '"' || some_c == 39)
 	{
@@ -36,7 +36,7 @@ void	ft_alloc_elem_helper2(t_struct *ss, unsigned int elem,
 }
 
 void	ft_alloc_elem_helper1(t_struct *ss, unsigned int elem,
-			unsigned int len, unsigned int quot)
+			unsigned int len, char quot)
 {
 	ss->split[elem] = malloc(sizeof(char) * (len + 2));
 	if (!(ss->split[elem]))
@@ -76,7 +76,7 @@ void	ft_alloc_elem(t_struct *ss, unsigned int elem)
 
 int	ft_rec(t_struct *ss, unsigned int elem)
 {
-	unsigned int	quot;
+	char	quot;
 
 	while (*(ss->s) == ss->c && *(ss->s))
 		ss->s++;

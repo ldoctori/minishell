@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	wait_all_pid(int **exit_status_fd, int *pid, int cmd_number)
+void	wait_all_pid(int *pid, int cmd_number)
 {
 	int	j;
 
@@ -22,15 +22,12 @@ void	wait_all_pid(int **exit_status_fd, int *pid, int cmd_number)
 		waitpid(pid[j], &(g_last_exit.exit_status), 0);
 		if (g_last_exit.exit_status == 9)
 			g_last_exit.exit_status = 130;
-		if (j < cmd_number - 1)
-			write(exit_status_fd[j][1],
-				&(g_last_exit.exit_status), sizeof(int));
 		j++;
 	}
 	g_last_exit.flag = -1;
 }
 
-void	close_wait(int **fd, int **exit_status_fd, int *pid, int cmd_number)
+void	close_wait(int **fd, int *pid, int cmd_number)
 {
 	int	j;
 
@@ -41,12 +38,5 @@ void	close_wait(int **fd, int **exit_status_fd, int *pid, int cmd_number)
 		close(fd[j][1]);
 		j++;
 	}
-	wait_all_pid(exit_status_fd, pid, cmd_number);
-	j = 0;
-	while (j < cmd_number - 1)
-	{
-		close(exit_status_fd[j][0]);
-		close(exit_status_fd[j][1]);
-		j++;
-	}
+	wait_all_pid(pid, cmd_number);
 }
