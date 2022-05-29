@@ -6,21 +6,11 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 16:01:09 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 16:20:04 by cadda            ###   ########.fr       */
+/*   Updated: 2022/05/29 18:14:01 by ldoctori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	arguments_check(int argc, char **argv)
-{
-	if (argc > 1 || argv[1] != NULL)
-	{
-		errno = 1;
-		perror("to many arguments");
-		exit(1);
-	}
-}
 
 t_env	*env_update(t_command *cmd)
 {
@@ -46,6 +36,9 @@ t_env	*go_on(t_command *cmd_list_start, char *line,
 		cd(cmd_list_start);
 	else
 	{
+		g_last_exit.pid = malloc(sizeof(int)
+				* (cmd_list_start->cmd_number + 1));
+		g_last_exit.pid[cmd_list_start->cmd_number] = 0;
 		cmds_executer(cmd_list_start, cmd_list_start->envp);
 		env = env_update(cmd_list_start);
 	}
@@ -54,7 +47,7 @@ t_env	*go_on(t_command *cmd_list_start, char *line,
 	return (env);
 }
 
-void	signals_catcher()
+void	signals_catcher(void)
 {
 	struct sigaction	sa;
 
@@ -76,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	char		*prompt;
 	t_env		*env;
 
-
+	arguments_check(argc, argv);
 	signals_catcher();
 	env = get_env_list(envp);
 	envp = get_envp_arr(envp);
@@ -84,23 +77,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		prompt = path_for_prompt(envp);
 		g_last_exit.prompt = prompt;
-		if (prompt == NULL)
-		{
-			free_parser(line, token_arr, cmd_list_start);
-			break ;
-		}
+		prompt_check(line, prompt, token_arr, cmd_list_start);
 		line = readline(prompt);
-		if (!line)
-		{
-			write(0, "exit\n", 5);
-			exit_cmd(line, token_arr, prompt, cmd_list_start);
-		}
-		if (*line == '\0')
-		{
-			free(prompt);
-			free(line);
+		if (line_check(line, prompt, token_arr, cmd_list_start) == 1)
 			continue ;
-		}
 		add_history(line);
 		token_arr = ft_split(line, ' ');
 		cmd_list_start = get_command_list(token_arr, envp, env);

@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 15:10:54 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 09:40:44 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 18:12:27 by ldoctori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,15 @@ void	exec_pid(t_command *command, int *exp_fd, int **exit_status_fd, int i)
 	free(str_of_paths);
 }
 
-t_command	*cmds_executer_helper(t_command *command,
-									int *exp_fd, int *pid, int *i)
+int	*fork_create(int i)
 {
-	del_fd_free(command->del_fd);
-	close(exp_fd[1]);
-	if ((ft_strcmp(command->cmd_args[0], "export") == 0
-			|| ft_strcmp(command->cmd_args[0], "unset") == 0)
-		&& command->cmd_args[1] != NULL)
-	{
-		waitpid(pid[*i], NULL, WNOHANG);
-		set_new_env_list(command, exp_fd);
-	}
-	close(exp_fd[0]);
-	free(exp_fd);
-	(*i)++;
-	command = command->next;
-	return (command);
+	int	*exp_fd;
+
+	exp_fd = malloc(sizeof(int) * 2);
+	pipe(exp_fd);
+	g_last_exit.pid[i] = fork();
+	g_last_exit.flag = g_last_exit.pid[i];
+	return (exp_fd);
 }
 
 void	cmds_executer(t_command *command, char *envp[])
@@ -110,28 +102,22 @@ void	cmds_executer(t_command *command, char *envp[])
 	int	*exp_fd;
 	int	**exit_status_fd;
 
-	g_last_exit.pid = malloc(sizeof(int) * (command->cmd_number + 1));
-	g_last_exit.pid[command->cmd_number] = 0;
 	fd = fd_allocate(command->cmd_number);
 	exit_status_fd = fd_allocate(command->cmd_number);
 	i = 0;
 	while (command)
 	{
-		exp_fd = malloc(sizeof(int) * 2);
-		pipe(exp_fd);
-		g_last_exit.pid[i] = fork();
-		g_last_exit.flag = g_last_exit.pid[i];
-		if (pid_error(g_last_exit.pid, i, fd, command->cmd_number) && g_last_exit.pid[i] == 0)
+		exp_fd = fork_create(i);
+		if (pid_error(g_last_exit.pid, i, fd, command->cmd_number)
+			&& g_last_exit.pid[i] == 0)
 		{	
-			signal(SIGINT,SIG_IGN);
+			signal(SIGINT, SIG_IGN);
 			here_doc(command);
 			signal(SIGQUIT, SIG_DFL);
 			close(exp_fd[0]);
 			fd_duplicate(fd, i, command);
 			exec_pid(command, exp_fd, exit_status_fd, i);
 		}
-		if (ft_strcmp(command->cmd_args[0], "./minishell") == 0)
-			g_last_exit.flag = -2;
 		command = cmds_executer_helper(command, exp_fd, g_last_exit.pid, &i);
 	}
 	finish_exec(fd, exit_status_fd, g_last_exit.pid, i);

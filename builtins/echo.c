@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/22 09:38:10 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 09:40:15 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 16:14:12 by cadda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	echo_cmd(t_command *cmd)
 {
-	int	i;
-	bool new_line;
+	int		i;
+	bool	new_line;
 
 	i = 1;
 	new_line = true;
@@ -24,7 +24,6 @@ void	echo_cmd(t_command *cmd)
 		printf("\n");
 		return ;
 	}
-	
 	if (ft_strcmp(cmd->cmd_args[i], "-n") == 0)
 	{
 		i++;

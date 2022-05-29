@@ -1,16 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/29 18:13:05 by ldoctori          #+#    #+#             */
+/*   Updated: 2022/05/29 18:13:07 by ldoctori         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	sig_int_handler(int sig)
 {
-    struct termios old_term, new_term;
-    char *cursor;
-    char *esc_sequence;
+	int	i;
 
-	new_term = old_term;
 	if (g_last_exit.flag == -1)
 	{
 		printf("\n");
-		printf("%s",g_last_exit.prompt);
+		printf("%s", g_last_exit.prompt);
 	}
 	else if (g_last_exit.flag == 0)
 	{
@@ -20,7 +29,7 @@ void	sig_int_handler(int sig)
 	else if (g_last_exit.flag > 0)
 	{
 		printf("\n");
-		int i = 0;
+		i = 0;
 		while (g_last_exit.pid[i])
 		{
 			kill(g_last_exit.pid[i], SIGKILL);

@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 13:04:51 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/15 13:05:16 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 16:27:06 by cadda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	here_doc_error(char *line, char *delimiter)
 {
 	if (!line)
 	{
-		printf("minishell: warning: here-document delimited by end-of-line (wanted '%s')\n", delimiter);
+		printf("minishell: warning: here-document "
+			"delimited by end-of-line (wanted '%s')\n", delimiter);
 		return ;
 	}
 	free(line);

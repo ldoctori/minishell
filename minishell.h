@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 12:02:09 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/22 16:00:02 by cadda            ###   ########.fr       */
+/*   Updated: 2022/05/29 18:15:02 by ldoctori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,22 @@ int				**fd_allocate(int cmd_number);
 char			**get_envp_arr(char **envp);
 char			**updape_envp_arr(t_env *env, char **envp);
 void			free_arr(char **arr);
+int				line_check(char *line, char *prompt,
+					char **token_arr, t_command *cmd_list_start);
+void			arguments_check(int argc, char **argv);
+void			prompt_check(char *line, char *prompt,
+					char **token_arr, t_command *cmd_list_start);
 
 /*-----------executor--------------*/
 void			free_fd(int **fd, int fd_number);
 void			del_fd_free(int *del_fd);
 void			cmds_executer(t_command *command, char *envp[]);
+t_command		*cmds_executer_helper(t_command *command,
+					int *exp_fd, int *pid, int *i);
 void			fd_duplicate(int **fd, int i, t_command *command);
 void			close_wait(int **fd, int **exit_status_fd,
 					int *pid, int cmd_number);
+void			wait_all_pid(int **exit_status_fd, int *pid, int cmd_number);
 void			exec_pid(t_command *command, int *exp_fd,
 					int **exit_status_fd, int i);
 char			*find_cmd_path(char **paths, t_command *command);
@@ -149,7 +157,7 @@ void			echo_cmd(t_command *cmd);
 
 /*-----------builtins--------------*/
 void			sig_int_handler(int sig);
-void			signals_catcher();
-void	sig_quit_handler(int sig);
+void			signals_catcher(void);
+void			sig_quit_handler(int sig);
 
 #endif

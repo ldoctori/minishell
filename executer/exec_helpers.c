@@ -6,42 +6,11 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 15:13:05 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/15 15:13:06 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 16:27:44 by cadda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	close_wait(int **fd, int **exit_status_fd, int *pid, int cmd_number)
-{
-	int	j;
-
-	j = 0;
-	while (j < cmd_number - 1)
-	{
-		close(fd[j][0]);
-		close(fd[j][1]);
-		j++;
-	}
-	j = 0;
-	while (j < cmd_number)
-	{
-		waitpid(pid[j], &(g_last_exit.exit_status), 0);
-		if (g_last_exit.exit_status == 9)
-			g_last_exit.exit_status = 130;
-		if (j < cmd_number - 1)
-			write(exit_status_fd[j][1], &(g_last_exit.exit_status), sizeof(int));
-		j++;
-	}
-	g_last_exit.flag = -1;
-	j = 0;
-	while (j < cmd_number - 1)
-	{
-		close(exit_status_fd[j][0]);
-		close(exit_status_fd[j][1]);
-		j++;
-	}
-}
 
 void	finish_exec(int **fd, int **exit_status_fd, int *pid, int cmd_number)
 {
@@ -96,4 +65,25 @@ char	*get_path_env(char **envp)
 		envp++;
 	}
 	return (NULL);
+}
+
+t_command	*cmds_executer_helper(t_command *command,
+									int *exp_fd, int *pid, int *i)
+{
+	if (ft_strcmp(command->cmd_args[0], "./minishell") == 0)
+			g_last_exit.flag = -2;
+	del_fd_free(command->del_fd);
+	close(exp_fd[1]);
+	if ((ft_strcmp(command->cmd_args[0], "export") == 0
+			|| ft_strcmp(command->cmd_args[0], "unset") == 0)
+		&& command->cmd_args[1] != NULL)
+	{
+		waitpid(pid[*i], NULL, WNOHANG);
+		set_new_env_list(command, exp_fd);
+	}
+	close(exp_fd[0]);
+	free(exp_fd);
+	(*i)++;
+	command = command->next;
+	return (command);
 }
