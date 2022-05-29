@@ -6,7 +6,7 @@
 /*   By: ldoctori <hectkctk@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 12:02:09 by ldoctori          #+#    #+#             */
-/*   Updated: 2022/05/29 18:15:02 by ldoctori         ###   ########.fr       */
+/*   Updated: 2022/05/29 18:58:24 by ldoctori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <linux/ioctl.h>
 # include <curses.h>
 # include <term.h>
+# include <signal.h>
 
 typedef struct s_global
 {
