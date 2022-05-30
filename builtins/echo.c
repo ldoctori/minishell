@@ -33,7 +33,8 @@ void	echo_cmd(t_command *cmd)
 	{
 		printf("%s", cmd->cmd_args[i]);
 		if (new_line)
-			printf("\n");
+			printf(" ");
 		i++;
 	}
+	printf("\n");
 }

@@ -17,7 +17,9 @@ void	sig_int_hand_halper(void)
 	if (g_last_exit.flag == -1)
 	{
 		printf("\n");
-		printf("%s", g_last_exit.prompt);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 	else if (g_last_exit.flag == 0)
 	{

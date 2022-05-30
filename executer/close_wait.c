@@ -22,6 +22,10 @@ void	wait_all_pid(int *pid, int cmd_number)
 		waitpid(pid[j], &(g_last_exit.exit_status), 0);
 		if (g_last_exit.exit_status == 9)
 			g_last_exit.exit_status = 130;
+		else
+			g_last_exit.exit_status = g_last_exit.exit_status >> 8;
+		if (g_last_exit.exit_status == 9)
+			g_last_exit.exit_status = 130;
 		j++;
 	}
 	g_last_exit.flag = -1;

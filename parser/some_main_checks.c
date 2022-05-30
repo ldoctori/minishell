@@ -33,7 +33,7 @@ int	line_check(char *line, char *prompt,
 		write(0, "exit\n", 5);
 		exit_cmd(line, token_arr, prompt, cmd_list_start);
 	}
-	if (*line == '\0')
+	if (*line == '\0' || *line == ' ')
 	{
 		free(prompt);
 		free(line);

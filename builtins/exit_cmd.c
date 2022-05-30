@@ -17,7 +17,7 @@ void	exit_cmd(char *line, char **token_arr, char *prompt, t_command *command)
 	if (!line)
 		exit(EXIT_SUCCESS);
 	if (command->next != NULL
-		|| ft_strncmp(command->cmd_args[0], "exit", 4) != 0)
+		|| ft_strcmp(command->cmd_args[0], "exit") != 0)
 		return ;
 	free_env_list(command->env);
 	free_parser(line, token_arr, command);
