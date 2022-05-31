@@ -90,6 +90,7 @@ void	cmds_executer(t_command *command)
 			fd_duplicate(fd, i, command);
 			exec_pid(command, exp_fd);
 		}
+		
 		command = cmds_executer_helper(command, exp_fd, g_last_exit.pid, &i);
 	}
 	finish_exec(fd, g_last_exit.pid, i);

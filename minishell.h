@@ -156,6 +156,5 @@ void			echo_cmd(t_command *cmd);
 /*-----------builtins--------------*/
 void			sig_int_handler(int sig);
 void			signals_catcher(void);
-void			sig_quit_handler(int sig);
 
 #endif

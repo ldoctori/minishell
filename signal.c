@@ -23,8 +23,8 @@ void	sig_int_hand_halper(void)
 	}
 	else if (g_last_exit.flag == 0)
 	{
-		printf("\n");
-		exit(EXIT_SUCCESS);
+		printf("asdasdasd\n");
+		exit(130);
 	}
 }
 
