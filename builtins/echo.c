@@ -32,9 +32,10 @@ void	echo_cmd(t_command *cmd)
 	while (cmd->cmd_args[i])
 	{
 		printf("%s", cmd->cmd_args[i]);
-		if (new_line)
+		if (cmd->cmd_args[i + 1])
 			printf(" ");
 		i++;
 	}
-	printf("\n");
+	if (new_line)
+		printf("\n");
 }
